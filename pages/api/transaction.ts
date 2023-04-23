@@ -1,14 +1,28 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import * as sql from "mssql";
+import { DefaultAzureCredential } from '@azure/identity'
+import { SecretClient } from '@azure/keyvault-secrets'
 
-// Define the connection string to Azure SQL
-const connectionString: any = process.env.AZURE_SQL_CONNECTION_STRING;
+const keyVaultName = process.env.KEYVAULT_NAME;
+const keyVaultUri = `https://${keyVaultName}.vault.azure.net`
+const secretName: any = process.env.SECRET_NAME;
+const credential = new DefaultAzureCredential()
+const client = new SecretClient(keyVaultUri, credential)
 
-const pool: sql.ConnectionPool = new sql.ConnectionPool(connectionString);
-const poolConnect: Promise<sql.ConnectionPool> = pool.connect();
 
 // Define the API route
 export default async function handler(req: any, res: any) {
+  // Get the secret
+  const secret = await client.getSecret(secretName);
+
+  // Define the connection string to Azure SQL
+  const connectionString: any = secret.value;
+
+  console.log(connectionString)
+
+  const pool: sql.ConnectionPool = new sql.ConnectionPool(connectionString);
+  const poolConnect: Promise<sql.ConnectionPool> = pool.connect();
+
   // Wait for a connection
   await poolConnect;
   // Check req method
