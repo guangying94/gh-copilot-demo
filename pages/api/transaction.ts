@@ -18,8 +18,6 @@ export default async function handler(req: any, res: any) {
   // Define the connection string to Azure SQL
   const connectionString: any = secret.value;
 
-  console.log(connectionString)
-
   const pool: sql.ConnectionPool = new sql.ConnectionPool(connectionString);
   const poolConnect: Promise<sql.ConnectionPool> = pool.connect();
 
@@ -58,6 +56,7 @@ export default async function handler(req: any, res: any) {
       }
     }
   }
+  // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
   //If the request is post, then execute sql prodcedure to insert a new transaction, with the data from the request body
   //The request body has the properties of username, product, quantity and transact_date
 }

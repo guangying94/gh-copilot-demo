@@ -93,6 +93,7 @@ export default function Home() {
 
   const handleTransactionUpdateButtonPressed = async () => {
     console.log(selectedRow);
+    setVisible(false);
     // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
   };
 
