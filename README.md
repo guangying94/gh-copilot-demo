@@ -1,38 +1,56 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# GitHub Copilot Demo
+This repository contains a simple CRUD application, illustrating how Copilot can accelerate developer workflow.
 
-## Getting Started
+## Application Architecture
+![image](./assets/architecture.png)
 
-First, run the development server:
+### Application Flow
+This application is developed in Next.JS, using built-in API route. The API is represented as:
+1. Get single transaction
+2. Get all transactions
+3. Create new transaction
+4. Update transaction
+5. Delete transaction
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+### Database schema
+All interaction is done via stored procedure in Azure SQL, which is defined. The table schema is as below:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+|Table Name | Column| Type| Constraint|
+|---|---|---|---|
+|[dbo].[transactions]| transaction_id | INT| Primary Key, Auto Increment|
+|   | username | NVARCHAR(50)| NOT NULL |
+|   | product  | NVARCHAR(50) | NOT NULL |
+|   | quantity | INT    | NOT NULL |
+|   | transact_date | DATE | NOT NULL|
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+List of stored procedures:
+1. [dbo].[GetAllTransactions]
+2. [dbo].[GetTransactionById]
+3. [dbo].[InsertTransaction]
+4. [dbo].[UpdateTransaction]
+5. [dbo].[DeleteTransaction]
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## Demo Scenario
+The application can only retrieve all transactions from Azure SQL and show results in table. Other actions (Create new transaction, update transaction, delete transaction) are not functioning. The API is not created, and the frontend will only show logs in console that button is clicked.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+In this demo, we will showcase how GitHub Copilot learns how I code, and convert code from comment.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Step 1: Launch in Codespaces
+Launch the repo in Codespaces. The Codespaces image is pre-built hence the load up time is fast. Wait till GitHub Copilot logo shows at bottom right corner.
 
-## Learn More
+### Step 2: Update API
+Open /pages/api/transaction.ts. Comments are provided in line 60 and 61.
 
-To learn more about Next.js, take a look at the following resources:
+Press "Enter", Copilot will start suggest code.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Create API for POST, PUT and DELETE. Copilot will even suggest comments for you.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Step 3: Update Web UI
+Look out for comments with 🔥🔥🔥
+Use comment to create fetch request, targetting the backend API created just now.
 
-## Deploy on Vercel
+### Step 4 (Optional): Commit code
+This will trigger GitHub actions, and update the application in Azure Container Apps.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Step 5: Show that application is working
+Create new entry, update, and delete the entry. Refresh the browser to shows that the data is inserted into database, not just React State.
