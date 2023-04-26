@@ -88,7 +88,15 @@ export default function Home() {
     };
     console.log(transaction);
     // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-    // POST request using fetch with async/await, pointing to the api route /api/transaction. then fetchdata to update the state
+    // POST request using fetch with async/await, pointing to the api route /api/transaction. then fetchdata to update the state using fetchData()
+    const res = await fetch("/api/transaction", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(transaction),
+    });
+    fetchData();
   };
 
   const handleTransactionUpdateButtonPressed = async () => {
@@ -96,11 +104,24 @@ export default function Home() {
     setVisible(false);
     // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
     // PUT request using fetch with async/await, pointing to the api route /api/transaction. then fetchdata to update the state
+    const res = await fetch("/api/transaction", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(selectedRow),
+    });
+    fetchData();
   };
 
   const handleDeleteButtonPressed = async (transaction: Transaction) => {
     console.log(transaction.transaction_id + ' is deleted');
     // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
+    // DELETE request using fetch with async/await, pointing to the api route /api/transaction. take in the url query, with properties transaction_id. then fetchdata to update the state
+    const res = await fetch(`/api/transaction?transaction_id=${transaction.transaction_id}`, {
+      method: "DELETE",
+    });
+    fetchData();
   }
 
   return (

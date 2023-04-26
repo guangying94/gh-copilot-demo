@@ -59,4 +59,54 @@ export default async function handler(req: any, res: any) {
   // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
   //If the request is post, then execute sql prodcedure to insert a new transaction, with the data from the request body
   //The request body has the properties of username, product, quantity and transact_date
+  // 🔥���
+  if (req.method === "POST") {
+    try {
+      // Execute the stored procedure
+      const result: sql.IProcedureResult<any> = await pool
+        .request()
+        .input("username", sql.VarChar, req.body.username)
+        .input("product", sql.VarChar, req.body.product)
+        .input("quantity", sql.Int, req.body.quantity)
+        .input("transact_date", sql.Date, req.body.transact_date)
+        .execute("[dbo].[CreateTransaction]");
+      // Send back the result as JSON
+      res.status(200).json(result.recordset);
+    } catch (err: any) {
+      // Handle errors
+      res.status(500).send(err.message);
+    }
+  }
+  // i want put request to update the quantity of a transaction.accept the request from body
+  if (req.method === "PUT") {
+    try {
+      // Execute the stored procedure
+      const result: sql.IProcedureResult<any> = await pool
+        .request()
+        .input("transaction_id", sql.Int, req.body.transaction_id)
+        .input("quantity", sql.Int, req.body.quantity)
+        .execute("[dbo].[UpdateTransaction]");
+      // Send back the result as JSON
+      res.status(200).json(result.recordset);
+    } catch (err: any) {
+      // Handle errors
+      res.status(500).send(err.message);
+    }
+  }
+  // i want delete request to delete a transaction.accept the request from url query called transaction_id
+  if (req.method === "DELETE") {
+    try {
+      // Execute the stored procedure
+      const result: sql.IProcedureResult<any> = await pool
+        .request()
+        .input("transaction_id", sql.Int, req.query.transaction_id)
+        .execute("[dbo].[DeleteTransaction]");
+      // Send back the result as JSON
+      res.status(200).json(result.recordset);
+    } catch (err: any) {
+      // Handle errors
+      res.status(500).send(err.message);
+    }
+  }
+
 }
